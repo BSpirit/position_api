@@ -1,0 +1,150 @@
+swagger: '2.0'
+info:
+  title: Position API
+  version: "0.1"
+  description: Simple API to store and retrieve positions
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: "/api"
+paths:
+  /positions:
+    get:
+      tags: [Positions]
+      operationId: operations.position.get_all
+      summary: Get all positions
+      responses:
+        200:
+          description: Return positions
+          schema:
+            type: object
+            properties:
+              positions:
+                type: array
+                items:
+                  $ref: '#/definitions/Position'
+    post:
+      tags: [Positions]
+      operationId: operations.position.create
+      summary: Create position
+      parameters:
+        - name: new_position
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Position'
+      responses:
+        201:
+          description: Position created
+        400:
+          description: Invalid inputs
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+  /positions/{position_id}:
+    get:
+      tags: [Positions]
+      operationId: operations.position.get
+      summary: Get a position
+      parameters:
+        - $ref: '#/parameters/position_id'
+      responses:
+        200:
+          description: Return position
+          schema:
+            $ref: '#/definitions/Position'
+        404:
+          description: Position does not exist
+    put:
+      tags: [Positions]
+      operationId: operations.position.update
+      summary: Update a position
+      parameters:
+        - $ref: '#/parameters/position_id'
+        - name: updated_position
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Position'
+      responses:
+        200:
+          description: Return updated position
+          schema:
+            $ref: '#/definitions/Position'
+        400:
+          description: Invalid inputs
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+        404:
+          description: Position does not exist
+    delete:
+      tags: [Positions]
+      operationId: operations.position.delete
+      summary: Delete a position
+      parameters:
+        - $ref: '#/parameters/position_id'
+      responses:
+        200:
+          description: Position deleted
+        404:
+          description: Position does not exist
+
+
+parameters:
+  position_id:
+    name: position_id
+    description: Position Unique identifier
+    in: path
+    type: integer
+    required: true
+  
+definitions:
+  Position:
+    type: object
+    required:
+      - latitudeE7
+      - altitude
+      - longitudeE7
+      - timestampMs
+      - verticalAccuracy
+      - accuracy
+    properties:
+      position_id:
+        readOnly: true
+        type: integer
+        description: Unique identifier
+        example: 1
+      latitudeE7:
+        type: integer
+        description: Position latitude
+        example: 488182212
+      altitude:
+        type: integer
+        description: Position altitude
+        example: 88
+      longitudeE7:
+        type: integer
+        description: Position longitude
+        example: 22446445
+      timestampMs:
+        type: string
+        description: Position timestamp in ms
+        example: "1562563557125"
+        minLength: 1
+        maxLength: 15
+      verticalAccuracy:
+        type: integer
+        description: Position vertical accuracy
+        example: 6
+      accuracy:
+        type: integer
+        description: Position accuracy
+        example: 14
+
+  BadRequestResponse:
+    type: object
+    properties:
+      errors:
+        type: object
+        example: {"field_name": ["error"]}
