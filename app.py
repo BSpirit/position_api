@@ -7,5 +7,5 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 connexion_app: FlaskApp = FlaskApp(__name__)
-connexion_app.app.config.from_object(app_config[os.getenv('APP_SETTINGS')])
+connexion_app.app.config.from_object(app_config[os.getenv('APP_SETTINGS') or 'default'])
 db: SQLAlchemy = SQLAlchemy(connexion_app.app)

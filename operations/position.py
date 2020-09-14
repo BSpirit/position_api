@@ -51,6 +51,7 @@ def create(new_position: dict) -> Tuple[dict, int]:
     """
 
     schema: PositionSchema = PositionSchema()
+    # Validation done again because connexion doesn't filter properties not defined in yaml specs
     try:
         new_position: dict = schema.load(new_position)
     except ValidationError as err:
